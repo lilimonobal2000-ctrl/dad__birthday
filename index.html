@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Dad 🎂</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:'Poppins', sans-serif;
+}
+
+/* SCROLL SNAP */
+html{
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+}
+
+section{
+  height:100vh;
+  scroll-snap-align:start;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  text-align:center;
+  position:relative;
+}
+
+/* NAV */
+nav{
+  position:fixed;
+  top:0;
+  width:100%;
+  background:#00000066;
+  backdrop-filter: blur(10px);
+  display:flex;
+  justify-content:center;
+  padding:10px;
+  z-index:1000;
+}
+nav a{
+  color:white;
+  margin:0 15px;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+/* VIDEO BACKGROUND */
+.bg-video{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:0;
+}
+
+/* OVERLAY */
+.overlay{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.35);
+  z-index:1;
+}
+
+/* FIREWORKS CANVAS */
+#canvas{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:2;
+  pointer-events:none;
+}
+
+/* PAGE CONTENT */
+.page-content{
+  position:relative;
+  z-index:3;
+  color:white;
+}
+
+/* BUTTONS */
+button, .btn{
+  padding:15px 30px;
+  border:none;
+  border-radius:30px;
+  background:gold;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:30px;
+  z-index:3;
+}
+
+/* TYPING TEXT */
+.typing{
+  font-size:2rem;
+  max-width:700px;
+  line-height:1.8;
+}
+
+/* PAGE 3 */
+#page3{
+  background:#b7a6a6;
+}
+
+/* GALLERY */
+.gallery{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.gallery img{
+  width:250px;
+  border-radius:15px;
+}
+
+/* GLOW TEXT */
+.glow{
+  font-size:50px;
+  text-shadow:0 0 20px #fff, 0 0 40px #ff0080;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <a href="#page1">Surprise 🎆</a>
+  <a href="#page2">Message 💌</a>
+  <a href="#page3">Memories 📸</a>
+</nav>
+
+<!-- MUSIC -->
+<audio id="music">
+  <source src="happy-ukulele-day.mp3" type="audio/mp3">
+</audio>
+
+<!-- PAGE 1 -->
+<section id="page1">
+  <video id="bgVideo1" class="bg-video" autoplay muted loop playsinline>
+    <source src="page1.mp4" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
+  <canvas id="canvas"></canvas>
+  <div class="page-content">
+    <h1 id="typingPage1" class="typing"></h1>
+    <button class="btn" onclick="startShow()">Start 🎉</button>
+  </div>
+</section>
+
+<!-- PAGE 2 -->
+<section id="page2">
+  <video id="bgVideo2" class="bg-video" autoplay muted loop playsinline>
+    <source src="bg2.mp4" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
+  <div class="page-content">
+    <h1>💌 My Message to Dad 💌</h1>
+    <div id="typingPage2" class="typing"></div>
+  </div>
+</section>
+
+<!-- PAGE 3 -->
+<section id="page3">
+  <h1>Memories 📸</h1>
+  <div class="gallery">
+    <img src="2026-03-19 20.29.08.jpg" alt="Memory 1">
+    <img src="2026-03-19 20.29.16.jpg" alt="Memory 2">
+    <img src="2026-03-19 20.28.56.jpg" alt="Memory 3">
+  </div>
+</section>
+
+<script>
+/* FORCE VIDEO PLAY */
+window.onload = () => {
+  document.querySelectorAll("video").forEach(v => {
+    v.muted = true;
+    v.play().catch(()=>{});
+  });
+
+  typePage1();
+};
+
+/* TYPE FUNCTION WITH CALLBACK */
+function typeText(el, text, speed, callback){
+  let i = 0;
+  el.innerHTML = "";
+  function type(){
+    if(i<text.length){
+      let char = text.charAt(i);
+      if(char === "\n") char = "<br>";
+      el.innerHTML += char;
+      i++;
+      setTimeout(type, speed);
+    } else if(callback){
+      callback();
+    }
+  }
+  type();
+}
+
+/* TYPE PAGE 1 */
+function typePage1(){
+  typeText(document.getElementById("typingPage1"), "Ready for SUPRISE!!! 👀🎆", 100);
+}
+
+/* TYPE PAGE 2 */
+function typePage2(){
+  typeText(document.getElementById("typingPage2"), "Happy Birthday Dad 🎂❤️ \n To my beloved Dad, Happy 54th Birthday. 🥳💕 \nI may not say it enough, but I am so proud to be your daughter. 🫶🏻 As you step into your 54th year, I wish your life to be filled with laughter and your days with good health and beautiful moments..🎀༘⋆ Thank you for being my father, my teacher and my greatest blessing. You are my forever hero 💗 \n ♡𝑰 𝒍𝒐𝒗𝒆 𝒚𝒐𝒖𝒖𝒖♡ ", 50);
+}
+
+
+/* FIREWORK SYSTEM */
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let particles = [];
+let active = false;
+
+function firework(x,y,color){
+  for(let i=0;i<120;i++){
+    particles.push({x,y,angle:Math.random()*2*Math.PI,speed:Math.random()*6+2,color});
+  }
+}
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach((p,i)=>{
+    p.x += Math.cos(p.angle)*p.speed;
+    p.y += Math.sin(p.angle)*p.speed;
+    p.speed *= 0.95;
+    ctx.fillStyle = p.color;
+    ctx.fillRect(p.x,p.y,2,2);
+    if(p.speed<0.5) particles.splice(i,1);
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* START BUTTON */
+function startShow(){
+  active = true;
+  document.getElementById("music").play();
+
+  // Change background video
+  const bgVideo1 = document.getElementById("bgVideo1");
+  bgVideo1.src = "HBDbg.mp4";
+  bgVideo1.play();
+
+  // Show glowing birthday message on Page 1
+  const content = document.querySelector("#page1 .page-content");
+  content.innerHTML = `<h1 class="glow">HAPPY BIRTHDAY DAD!💫 💫 </div>`;
+
+  // Fireworks
+  setInterval(()=>{
+    if(active){
+      firework(Math.random()*canvas.width, Math.random()*canvas.height/2, "hsl("+Math.random()*360+",100%,70%)");
+    }
+  },600);
+
+  // Scroll to Page 2 after 3s
+  setTimeout(()=>{
+    document.getElementById("page2").scrollIntoView({behavior:"smooth"});
+    typePage2();
+
+    // Scroll to Page 3 automatically after 14 seconds
+    setTimeout(()=>{
+      document.getElementById("page3").scrollIntoView({behavior:"smooth"});
+    }, 29000);
+  },9000);
+}
+
+/* FIREWORKS ON PAGE 3 */
+window.addEventListener("scroll", ()=>{
+  const page3 = document.getElementById("page3").getBoundingClientRect();
+  if(page3.top < window.innerHeight){
+    firework(Math.random()*canvas.width, Math.random()*canvas.height/2, "hsl("+Math.random()*360+",100%,70%)");
+  }
+});
+
+/* RESIZE CANVAS */
+window.addEventListener("resize", ()=>{
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
